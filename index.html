@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sooraj Abraham | Portfolio</title>
+    <style>
+        :root {
+            --primary-color: #007acc;
+            --text-dark: #222222;
+            --text-muted: #555555;
+            --bg-light: #ffffff;
+            --border-color: #dddddd;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            color: var(--text-dark);
+            background-color: var(--bg-light);
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 40px 20px;
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 40px;
+        }
+
+        @media (min-width: 768px) {
+            .container {
+                grid-template-columns: 1fr 2fr;
+                gap: 60px;
+            }
+        }
+
+        /* Left Sidebar Styling */
+        .sidebar {
+            text-align: center;
+        }
+
+        @media (min-width: 768px) {
+            .sidebar {
+                position: sticky;
+                top: 40px;
+                text-align: left;
+                height: fit-content;
+            }
+        }
+
+        .profile-title {
+            font-size: 2.2rem;
+            font-weight: 700;
+            color: var(--primary-color);
+            margin-bottom: 20px;
+        }
+
+        .profile-img-container {
+            width: 220px;
+            height: 220px;
+            margin: 0 auto 20px auto;
+            overflow: hidden;
+            border-radius: 50%;
+        }
+
+        @media (min-width: 768px) {
+            .profile-img-container {
+                margin: 0 0 20px 0;
+            }
+        }
+
+        .profile-img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .nav-links {
+            margin-bottom: 25px;
+            font-size: 0.95rem;
+        }
+
+        .nav-links a {
+            color: var(--primary-color);
+            text-decoration: none;
+            margin: 0 5px;
+        }
+
+        .nav-links a:hover {
+            text-decoration: underline;
+        }
+
+        .nav-links span {
+            color: var(--border-color);
+        }
+
+        .bio-text {
+            color: var(--text-muted);
+            font-size: 1rem;
+            margin-bottom: 15px;
+            text-align: justify;
+        }
+
+        /* Main Content Styling */
+        .main-content h2 {
+            font-size: 2rem;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 10px;
+            margin-bottom: 25px;
+        }
+
+        .section-title {
+            font-size: 1.4rem;
+            color: var(--text-dark);
+            margin-top: 30px;
+            margin-bottom: 5px;
+        }
+
+        .section-subtitle {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #333333;
+            margin-bottom: 5px;
+        }
+
+        .timeline-meta {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            margin-bottom: 15px;
+            font-style: italic;
+        }
+
+        .experience-list {
+            list-style-type: none;
+            padding-left: 0;
+        }
+
+        .experience-list li {
+            position: relative;
+            padding-left: 20px;
+            margin-bottom: 12px;
+            color: var(--text-muted);
+            font-size: 0.95rem;
+            text-align: justify;
+        }
+
+        .experience-list li::before {
+            content: "—";
+            position: absolute;
+            left: 0;
+            color: var(--text-muted);
+        }
+
+        .skills-container {
+            margin-top: 15px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .skill-tag {
+            background-color: #f0f0f0;
+            color: #444444;
+            padding: 4px 10px;
+            border-radius: 4px;
+            font-size: 0.85rem;
+            font-weight: 500;
+        }
+
+        .btn-github {
+            display: inline-flex;
+            align-items: center;
+            background-color: #24292e;
+            color: #ffffff;
+            padding: 6px 12px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            border-radius: 4px;
+            text-decoration: none;
+            margin-top: 15px;
+        }
+
+        .btn-github:hover {
+            background-color: #444444;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <!-- Left Column: Profile & Summary -->
+        <aside class="sidebar">
+            <h1 class="profile-title">Sooraj Abraham</h1>
+            
+            <div class="profile-img-container">
+                <!-- Replace with your actual image path or profile picture -->
+                <img src="profile.jpg" alt="Sooraj Abraham" class="profile-img">
+            </div>
+
+            <div class="nav-links">
+                <a href="#" target="_blank">Resume</a> <span>|</span>
+                <a href="https://linkedin.com" target="_blank">LinkedIn</a> <span>|</span>
+                <a href="https://github.com" target="_blank">GitHub</a>
+            </div>
+
+            <p class="bio-text">
+                I am an Artificial Intelligence Engineer currently based in Berlin, Germany. My technical expertise spans deep learning, machine learning pipelines, and algorithm optimization, with a strong focus on advanced vehicle perception and safety systems.
+            </p>
+            <p class="bio-text">
+                Passionate about solving complex computer vision problems, I specialize in designing embedded pipelines, optimizing neural networks, and handling large-scale annotated datasets to build robust, intelligent systems.
+            </p>
+        </aside>
+
+        <!-- Right Column: Portfolio Details & Experience -->
+        <main class="main-content">
+            <h2>Portfolio</h2>
+
+            <!-- Section: Core Capabilities -->
+            <h3 class="section-title">Technical Expertise</h3>
+            <div class="skills-container">
+                <span class="skill-tag">Deep Learning</span>
+                <span class="skill-tag">Computer Vision</span>
+                <span class="skill-tag">TensorFlow</span>
+                <span class="skill-tag">Python</span>
+                <span class="skill-tag">LiDAR Perception</span>
+                <span class="skill-tag">Algorithms</span>
+                <span class="skill-tag">Embedded Systems</span>
+                <span class="skill-tag">MongoDB</span>
+            </div>
+
+            <!-- Professional Experience 1 -->
+            <h3 class="section-title">Professional Experience</h3>
+            <div class="section-subtitle">Artificial Intelligence Engineer — Seeing Machines</div>
+            <div class="timeline-meta">Sep 2024 - Present | Berlin, Germany (Hybrid)</div>
+            <ul class="experience-list">
+                <li>Implemented a full object detection pipeline to identify personal items left on car seats. This included preprocessing data, training deep learning models, and evaluating performance using standard metrics.</li>
+                <li>Integrated MongoDB to manage annotated datasets for streamlined access and analytics.</li>
+                <li>Currently involved in activity recognition using video data to infer actions within the vehicle.</li>
+            </ul>
+
+            <!-- Professional Experience 2 -->
+            <div class="section-subtitle" style="margin-top: 25px;">Master Thesis - LiDAR AI Perception — Blickfeld</div>
+            <div class="timeline-meta">Work Study | Apr 2023 - Mar 2024 | Munich, Germany</div>
+            <p class="bio-text" style="font-size: 0.95rem; margin-bottom: 10px;">
+                Focused on optimizing complex perception architecture for embedded applications:
+            </p>
+            <ul class="experience-list">
+                <li>Optimizing LiDAR 3D point cloud object detection Network - PointPillar for Embedded devices.</li>
+                <li>Analyzed model performance with pruning at different sparsities and quantization.</li>
+                <li>Improved network runtime by 3.72 times, reducing processing time from 1600 milliseconds to less than 430 milliseconds, with minimal accuracy drop of 4%.</li>
+            </ul>
+            <a href="https://github.com" class="btn-github" target="_blank">View on GitHub</a>
+
+            <!-- Professional Experience 3 -->
+            <div class="section-subtitle" style="margin-top: 25px;">Computer Vision Intern — 4Pilots</div>
+            <div class="timeline-meta">Internship | Dec 2021 - May 2022 | Jena, Germany</div>
+            <ul class="experience-list">
+                <li>Prototyped In-Cabin Monitoring System for driver drowsiness and emotions.</li>
+                <li>Deployed Jetson Nano and optimized software performance for real-time monitoring.</li>
+                <li>Implemented drowsiness detection and fine-tuned emotion recognition models using TensorFlow and CNN, achieving a 92% accuracy rate in driver emotion classification.</li>
+            </ul>
+
+        </main>
+    </div>
+
+</body>
+</html>
