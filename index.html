@@ -193,7 +193,7 @@
             letter-spacing: -0.01em;
         }
 
-        /* Experience Cards */
+        /* Timeline & Experience Cards */
         .timeline {
             display: flex;
             flex-direction: column;
@@ -283,6 +283,85 @@
             font-weight: 600;
             color: var(--text-main);
         }
+
+        /* Work Stories Cards */
+        .story-card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-md);
+            overflow: hidden;
+            box-shadow: var(--shadow-sm);
+            transition: transform 0.2s ease, border-color 0.2s ease;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .story-card:hover {
+            border-color: #cbd5e1;
+            transform: translateY(-2px);
+        }
+
+        .story-media {
+            width: 100%;
+            height: 220px;
+            background-color: #e2e8f0;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .story-media img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+            transition: transform 0.3s ease;
+        }
+
+        .story-card:hover .story-media img {
+            transform: scale(1.02);
+        }
+
+        .story-body {
+            padding: 24px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .story-meta {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            font-size: 0.825rem;
+            color: var(--text-subtle);
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .story-title {
+            font-size: 1.15rem;
+            font-weight: 700;
+            color: var(--text-main);
+            letter-spacing: -0.015em;
+            line-height: 1.4;
+        }
+
+        .story-text {
+            font-size: 0.925rem;
+            color: var(--text-muted);
+            line-height: 1.6;
+        }
+
+        .story-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            margin-top: 4px;
+        }
+
+        .story-tags .skill-tag {
+            font-size: 0.775rem;
+            padding: 4px 10px;
+        }
     </style>
 </head>
 <body>
@@ -347,10 +426,10 @@
 
                     <article class="exp-card">
                         <div class="exp-header">
-                            <div class="exp-title">Artificial Intelligence Engineer <span class="exp-company">@ Seeing Machines</span></div>
+                            <div class="exp-title">Artificial Intelligence Engineer <span class="exp-company">@ Seeing Machines GmbH</span></div>
                             <div class="exp-date">Sep 2024 — Present</div>
                         </div>
-                        <div class="exp-location">Berlin, Germany (Hybrid)</div>
+                        <div class="exp-location">Berlin, Germany</div>
                         <ul class="exp-list">
                             <li>Architected an end-to-end object detection pipeline to detect personal items on car seats, managing data preprocessing, neural net training, and performance benchmarks.</li>
                             <li>Engineered <span class="highlight">MongoDB</span> data management architectures to streamline versioning, access, and analytics for large-scale annotated datasets.</li>
@@ -360,7 +439,7 @@
 
                     <article class="exp-card">
                         <div class="exp-header">
-                            <div class="exp-title">Master Thesis — LiDAR AI Perception <span class="exp-company">@ Blickfeld</span></div>
+                            <div class="exp-title">Master Thesis — LiDAR AI Perception <span class="exp-company">@ Blickfeld GmbH</span></div>
                             <div class="exp-date">Apr 2023 — Mar 2024</div>
                         </div>
                         <div class="exp-location">Munich, Germany (Work Study)</div>
@@ -384,6 +463,60 @@
                         </ul>
                     </article>
 
+                </div>
+            </section>
+
+            <!-- Work Stories -->
+            <section>
+                <h2 class="section-header">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
+                    Work Stories & Deep Dives
+                </h2>
+
+                <div class="timeline">
+                    <!-- Story Card 1 -->
+                    <article class="story-card">
+                        <div class="story-media">
+                            <img src="stories/lidar-optimization.jpg" alt="LiDAR point cloud detection optimization" onerror="this.parentElement.style.display='none'">
+                        </div>
+                        <div class="story-body">
+                            <div class="story-meta">
+                                <span>CASE STUDY</span>
+                                <span>March 2024</span>
+                            </div>
+                            <h3 class="story-title">From 1600ms to 430ms: Deploying PointPillars to Edge Compute</h3>
+                            <p class="story-text">
+                                A behind-the-scenes look at profiling bottleneck layers in 3D point cloud feature generation. Explored structured channel pruning combined with INT8 post-training quantization to achieve real-time embedded safety requirements without dropping critical bounding box accuracy.
+                            </p>
+                            <div class="story-tags">
+                                <span class="skill-tag">LiDAR</span>
+                                <span class="skill-tag">Quantization</span>
+                                <span class="skill-tag">Edge AI</span>
+                            </div>
+                        </div>
+                    </article>
+
+                    <!-- Story Card 2 -->
+                    <article class="story-card">
+                        <div class="story-media">
+                            <img src="stories/in-cabin-vision.jpg" alt="Driver monitoring test bench setup" onerror="this.parentElement.style.display='none'">
+                        </div>
+                        <div class="story-body">
+                            <div class="story-meta">
+                                <span>ENGINEERING NOTE</span>
+                                <span>Recent</span>
+                            </div>
+                            <h3 class="story-title">Designing Robust In-Cabin Perception Under Drastic Illumination Shifts</h3>
+                            <p class="story-text">
+                                Addressing edge cases in vehicle cabin monitoring where direct sunlight, shadows, and darkness challenge standard CNN pipelines. Highlights data augmentation strategies and infrared sensor calibration for robust real-time inference.
+                            </p>
+                            <div class="story-tags">
+                                <span class="skill-tag">Computer Vision</span>
+                                <span class="skill-tag">Dataset Engineering</span>
+                                <span class="skill-tag">Embedded</span>
+                            </div>
+                        </div>
+                    </article>
                 </div>
             </section>
         </main>
