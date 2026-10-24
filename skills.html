@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>3D Skill Map - Forward Deployment Engineer</title>
+    
+    <!-- Tailwind CSS for UI Overlay -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- 3D Force Graph Library & Three.js dependencies -->
+    <script src="https://unpkg.com/three"></script>
+    <script src="https://unpkg.com/3d-force-graph"></script>
+
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap');
+        
+        body { 
+            margin: 0; 
+            overflow: hidden; 
+            background-color: #030305; /* Deep space dark background */
+            font-family: 'Inter', sans-serif;
+            color: #ffffff;
+        }
+        
+        #3d-graph {
+            width: 100vw;
+            height: 100vh;
+            position: absolute;
+            top: 0;
+            left: 0;
+            z-index: 1;
+        }
+
+        /* UI Overlay Layer */
+        #ui-layer {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none; /* Let clicks pass through to the 3D canvas */
+            z-index: 10;
+        }
+
+        /* Customizing the 3d-force-graph tooltip */
+        .scene-tooltip {
+            background: rgba(15, 23, 42, 0.85) !important;
+            border: 1px solid rgba(255, 255, 255, 0.15) !important;
+            backdrop-filter: blur(8px) !important;
+            border-radius: 8px !important;
+            padding: 12px !important;
+            color: #e2e8f0 !important;
+            font-family: 'Inter', sans-serif !important;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5) !important;
+            pointer-events: none;
+            transition: opacity 0.2s ease-in-out;
+        }
+        
+        .tooltip-title {
+            font-size: 1.1rem;
+            font-weight: 700;
+            margin-bottom: 4px;
+            color: #ffffff;
+        }
+        
+        .tooltip-category {
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 6px;
+        }
+        
+        .tooltip-strength {
+            display: flex;
+            align-items: center;
+            font-size: 0.85rem;
+            font-weight: 400;
+        }
+        
+        .strength-indicator {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            display: inline-block;
+            margin-right: 6px;
+        }
+
+        /* Custom scrollbar for webkit if needed */
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: rgba(255,255,255,0.2);
+            border-radius: 3px;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- 3D Canvas Container -->
+    <div id="3d-graph"></div>
+
+    <!-- Modern UI Overlay -->
+    <div id="ui-layer" class="p-6 md:p-10 flex flex-col justify-between h-full">
+        
+        <!-- Header -->
+        <header class="flex flex-col gap-2 max-w-xl">
+            <h1 class="text-3xl md:text-5xl font-bold tracking-tight text-white drop-shadow-lg">
+                Knowledge Cloud
+            </h1>
+            <p class="text-slate-400 text-sm md:text-base font-light">
+                Interactive skill map representing the end-to-end pipeline of a Forward Deployment Engineer. 
+                <br class="hidden md:block"/>Scroll to zoom, drag to rotate.
+            </p>
+        </header>
+
+        <!-- Legends Container -->
+        <div class="flex flex-col md:flex-row gap-6 md:gap-12 self-start bg-slate-900/40 backdrop-blur-md border border-slate-700/50 p-6 rounded-2xl">
+            
+            <!-- Category Legend -->
+            <div>
+                <h3 class="text-xs uppercase tracking-widest text-slate-500 font-semibold mb-4">Domains</h3>
+                <ul class="space-y-3">
+                    <li class="flex items-center text-sm text-slate-300">
+                        <span class="w-3 h-3 rounded-full bg-blue-500 shadow-[0_0_10px_rgba(59,130,246,0.8)] mr-3"></span>
+                        Core Perception & AI
+                    </li>
+                    <li class="flex items-center text-sm text-slate-300">
+                        <span class="w-3 h-3 rounded-full bg-emerald-400 shadow-[0_0_10px_rgba(52,211,153,0.8)] mr-3"></span>
+                        Edge & Deployment
+                    </li>
+                    <li class="flex items-center text-sm text-slate-300">
+                        <span class="w-3 h-3 rounded-full bg-purple-500 shadow-[0_0_10px_rgba(168,85,247,0.8)] mr-3"></span>
+                        Data & MLOps
+                    </li>
+                    <li class="flex items-center text-sm text-slate-300">
+                        <span class="w-3 h-3 rounded-full bg-amber-500 shadow-[0_0_10px_rgba(245,158,11,0.8)] mr-3"></span>
+                        Frontier Exploration
+                    </li>
+                </ul>
+            </div>
+
+            <!-- Proficiency Legend -->
+            <div>
+                <h3 class="text-xs uppercase tracking-widest text-slate-500 font-semibold mb-4">Proficiency (Node Size)</h3>
+                <ul class="space-y-3 flex flex-col justify-center h-[calc(100%-2rem)]">
+                    <li class="flex items-center text-sm text-slate-300">
+                        <div class="w-6 flex justify-center mr-2">
+                            <span class="w-4 h-4 rounded-full bg-slate-400 opacity-80"></span>
+                        </div>
+                        Strong / Core
+                    </li>
+                    <li class="flex items-center text-sm text-slate-300">
+                        <div class="w-6 flex justify-center mr-2">
+                            <span class="w-3 h-3 rounded-full bg-slate-400 opacity-80"></span>
+                        </div>
+                        Acquired / Capable
+                    </li>
+                    <li class="flex items-center text-sm text-slate-300">
+                        <div class="w-6 flex justify-center mr-2">
+                            <span class="w-2 h-2 rounded-full bg-slate-400 opacity-80"></span>
+                        </div>
+                        Exploring / Learning
+                    </li>
+                </ul>
+            </div>
+
+        </div>
+    </div>
+
+    <script>
+        // --- Data Definition ---
+        // Categories and their colors
+        const categories = {
+            "Core Perception & AI": { color: "#3b82f6", glow: 0x3b82f6 }, // Blue
+            "Edge & Deployment": { color: "#34d399", glow: 0x34d399 }, // Emerald
+            "Data & MLOps": { color: "#a855f7", glow: 0xa855f7 }, // Purple
+            "Frontier Exploration": { color: "#f59e0b", glow: 0xf59e0b }  // Amber
+        };
+
+        // Proficiency levels for sizes
+        const sizes = {
+            "Strong": 10,
+            "Acquired": 6,
+            "Exploring": 3
+        };
+
+        // Define Nodes
+        const nodesData = [
+            // Core Perception & AI
+            { id: "Object Detection", group: "Core Perception & AI", strength: "Strong" },
+            { id: "3D Point Clouds", group: "Core Perception & AI", strength: "Strong" },
+            { id: "Video Activity Recognition", group: "Core Perception & AI", strength: "Acquired" },
+            { id: "CNNs", group: "Core Perception & AI", strength: "Strong" },
+            { id: "TensorFlow", group: "Core Perception & AI", strength: "Strong" },
+            { id: "PyTorch", group: "Core Perception & AI", strength: "Acquired" }, // Added a common complementary skill
+            
+            // Edge & Deployment
+            { id: "Model Quantization", group: "Edge & Deployment", strength: "Strong" },
+            { id: "Pruning", group: "Edge & Deployment", strength: "Acquired" },
+            { id: "NVIDIA Jetson", group: "Edge & Deployment", strength: "Strong" },
+            { id: "Embedded Systems", group: "Edge & Deployment", strength: "Acquired" },
+            { id: "Docker", group: "Edge & Deployment", strength: "Strong" },
+            { id: "TensorRT", group: "Edge & Deployment", strength: "Acquired" }, // Added complimentary
+            
+            // Data & MLOps
+            { id: "MongoDB", group: "Data & MLOps", strength: "Acquired" },
+            { id: "Data Pipelines", group: "Data & MLOps", strength: "Strong" },
+            { id: "Bash", group: "Data & MLOps", strength: "Strong" },
+            { id: "Automation", group: "Data & MLOps", strength: "Strong" },
+            { id: "CI/CD", group: "Data & MLOps", strength: "Acquired" }, // Added complimentary
+            
+            // Frontier Exploration
+            { id: "VLA Models", group: "Frontier Exploration", strength: "Exploring" },
+            { id: "Embodied AI", group: "Frontier Exploration", strength: "Exploring" },
+            { id: "LeRobot", group: "Frontier Exploration", strength: "Exploring" },
+            { id: "Reinforcement Learning", group: "Frontier Exploration", strength: "Exploring" },
+            { id: "Sim-to-Real", group: "Frontier Exploration", strength: "Exploring" } // Added complimentary
+        ];
+
+        // Define Links (Showing the pipeline flow and intra-cluster connections)
+        const linksData = [
+            // Data to AI Flow
+            { source: "Data Pipelines", target: "TensorFlow" },
+            { source: "Data Pipelines", target: "PyTorch" },
+            { source: "MongoDB", target: "Data Pipelines" },
+            { source: "Bash", target: "Automation" },
+            { source: "Automation", target: "CI/CD" },
+            { source: "CI/CD", target: "Docker" },
+            
+            // AI intra-connections
+            { source: "TensorFlow", target: "CNNs" },
+            { source: "PyTorch", target: "CNNs" },
+            { source: "CNNs", target: "Object Detection" },
+            { source: "CNNs", target: "Video Activity Recognition" },
+            { source: "3D Point Clouds", target: "Object Detection" },
+            
+            // AI to Edge Flow
+            { source: "TensorFlow", target: "Model Quantization" },
+            { source: "PyTorch", target: "Model Quantization" },
+            { source: "CNNs", target: "Pruning" },
+            
+            // Edge intra-connections
+            { source: "Model Quantization", target: "TensorRT" },
+            { source: "Pruning", target: "TensorRT" },
+            { source: "TensorRT", target: "NVIDIA Jetson" },
+            { source: "Docker", target: "NVIDIA Jetson" },
+            { source: "Embedded Systems", target: "NVIDIA Jetson" },
+            
+            // Edge to Frontier (Deployment enables robotics)
+            { source: "NVIDIA Jetson", target: "Embodied AI" },
+            
+            // Frontier intra-connections
+            { source: "Embodied AI", target: "VLA Models" },
+            { source: "Embodied AI", target: "Reinforcement Learning" },
+            { source: "Embodied AI", target: "LeRobot" },
+            { source: "Reinforcement Learning", target: "Sim-to-Real" },
+            
+            // AI direct to Frontier
+            { source: "3D Point Clouds", target: "Embodied AI" },
+            { source: "Video Activity Recognition", target: "VLA Models" }
+        ];
+
+        const graphData = {
+            nodes: nodesData,
+            links: linksData
+        };
+
+        // --- Initialize 3D Force Graph ---
+        const elem = document.getElementById('3d-graph');
+
+        const Graph = ForceGraph3D()(elem)
+            .graphData(graphData)
+            .backgroundColor('#030305')
+            
+            // Node Styling
+            .nodeRelSize(1)
+            .nodeVal(node => sizes[node.strength])
+            .nodeColor(node => categories[node.group].color)
+            .nodeResolution(16) // Higher resolution for smoother spheres
+            
+            // Links Styling (Faint constelation look)
+            .linkWidth(0.5)
+            .linkOpacity(0.15)
+            .linkColor(() => '#64748b') // Slate-500 for a subtle tech look
+            
+            // Tooltip Generation (HTML)
+            .nodeLabel(node => {
+                const catColor = categories[node.group].color;
+                return `
+                    <div class="tooltip-title">${node.id}</div>
+                    <div class="tooltip-category" style="color: ${catColor}">${node.group}</div>
+                    <div class="tooltip-strength">
+                        <span class="strength-indicator" style="background-color: ${catColor}"></span>
+                        Proficiency: ${node.strength}
+                    </div>
+                `;
+            })
+
+            // Physics tuning to make it look like a floating galaxy/point cloud
+            .d3Force('charge', d3.forceManyBody().strength(-150)) // Pushes nodes apart
+            .d3Force('link', d3.forceLink().distance(60)) // Link length
+            .d3Force('center', d3.forceCenter());
+
+        // --- Add glowing particle effect to nodes using Three.js materials ---
+        Graph.nodeThreeObject(node => {
+            const size = Math.cbrt(sizes[node.strength]) * 2.5; // Scale size for Three.js geometry
+            const color = categories[node.group].color;
+            
+            // Create a sphere representing the skill node
+            const geometry = new THREE.SphereGeometry(size, 16, 16);
+            
+            // Use a material that reacts to light and has an emissive 'glow' property
+            const material = new THREE.MeshPhongMaterial({
+                color: color,
+                emissive: color,
+                emissiveIntensity: 0.4,
+                transparent: true,
+                opacity: 0.9,
+                shininess: 30
+            });
+            
+            return new THREE.Mesh(geometry, material);
+        });
+
+        // --- Camera & Interaction Controls ---
+        // Setup initial camera position
+        Graph.cameraPosition({ z: 400 });
+
+        // Enable OrbitControls and set auto-rotation
+        Graph.controls().autoRotate = true;
+        Graph.controls().autoRotateSpeed = 0.5; // Slow, cinematic rotation
+        Graph.controls().enableDamping = true;
+        Graph.controls().dampingFactor = 0.05;
+        
+        // Custom interaction constraints
+        Graph.controls().minDistance = 50;  // How close user can zoom
+        Graph.controls().maxDistance = 800; // How far user can zoom
+
+        // --- Handle Window Resizing ---
+        window.addEventListener('resize', () => {
+            Graph.width(window.innerWidth);
+            Graph.height(window.innerHeight);
+        });
+
+        // Add subtle ambient light
+        const ambientLight = new THREE.AmbientLight(0xffffff, 0.2);
+        Graph.scene().add(ambientLight);
+
+        // Optional: Add a subtle particle dust background for a "space" feel
+        const createDust = () => {
+            const dustGeometry = new THREE.BufferGeometry();
+            const dustCount = 800;
+            const posArray = new Float32Array(dustCount * 3);
+            
+            for(let i = 0; i < dustCount * 3; i++) {
+                // Spread particles randomly in a large area
+                posArray[i] = (Math.random() - 0.5) * 1000;
+            }
+            
+            dustGeometry.setAttribute('position', new THREE.BufferAttribute(posArray, 3));
+            const dustMaterial = new THREE.PointsMaterial({
+                size: 1.5,
+                color: 0x475569, // Subtle slate color
+                transparent: true,
+                opacity: 0.3
+            });
+            
+            const dustMesh = new THREE.Points(dustGeometry, dustMaterial);
+            Graph.scene().add(dustMesh);
+        };
+        
+        // Execute background creation
+        createDust();
+
+    </script>
+</body>
+</html>
